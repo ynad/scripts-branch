@@ -12,7 +12,7 @@ Version:
 
 Description:
 ------------
-..
+A collection of scripts (especially bash and similar) that I wrote for my personal use.
 
 
 License:
