@@ -3,6 +3,10 @@
 ## Automated script to ban IPs making several unauthorized connections
 ## Written by ynad - 2014.02.11
 
+## Software requirements:
+# * iptables    (with logging capabilities)
+# * ssmtp       (installed and configured, see for example https://wiki.archlinux.org/index.php/SSMTP)
+
 ## Settings - adapt the following to your environment
 # set the maximum number of allowed connections for each IP
 maxconn=40
@@ -13,13 +17,13 @@ syslog=/var/log/syslog
 # file containing iptables rules - must implement custom chains BANLIST and BAN
 iptablesconf=/etc/iptables.up.rules
 # log file for humans
-userlog=/root/Dropbox/FusedAdmins/ban-ip.log
+userlog=/root/ban-ip.log
 # name to indentify this server (used in emails)
-serverstring=Fused-Server
+serverstring=My-Server
 # email destination of warning emails
-mailadmin=ynad92@gmail.com
+mailadmin=myemail@myserver.com
 # sender email - must be configured in sSMTP settings
-mailserver=fused.server@gmail.com
+mailserver=myserver@myserver.com
 # my logs & temp files
 iplog=/tmp/ips.log
 banlog=/root/.config/ban-ip.log
@@ -30,7 +34,7 @@ pattern1=SSH-in
 pattern2=VPN-in
 pattern3=VPN2-in
 # network interface to monitor (to monitor more than one, add "-e $ifwalX" after "grep -e $ifwal1" in function extract-ips)
-ifwal1=fused_pub
+ifwal1=eth0
 # misc
 declare -A freq
 declare -A ips
