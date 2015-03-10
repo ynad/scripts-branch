@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Automated script to ban IPs making several unauthorized connections
-## Written by ynad - 2014.02.11
+## Written by ynad - 2014.03.10
 
 ## Software requirements:
 # * iptables    (with logging capabilities)
@@ -26,9 +26,11 @@ mailadmin=myemail@myserver.com
 mailserver=myserver@myserver.com
 # my logs & temp files
 iplog=/tmp/ips.log
-banlog=/root/.config/ban-ip.log
-warnnum=/root/.config/warn-num.log
 mailtext=/tmp/ban-mail.txt
+logspath=/root/.config
+banlog=$logspath/ban-ip.log
+whitelist=$logspath/whitelist-ip.log
+warnnum=$logspath/warn-num.log
 # declare patterns to search ("--log-prefix" in iptables logging, case sensitive)
 pattern1=SSH-in
 pattern2=VPN-in
@@ -68,17 +70,29 @@ function update-iptables {
 }
 
 function ban-ip () {
+    # check if found IP belongs to the whitelist
+    if [ -f $whitelist ]; then
+        for ip in $(cat $whitelist); do
+            if [ $ip == $1 ]; then
+                echo "---> IP: ${1} is whitelisted!"
+                return 2
+            fi
+        done
+    fi
     # check if found IP was already banned, if not ban it now
-    for ip in $(cat $banlog); do
-        if [ $ip == $1 ]; then
-            echo "---> IP: ${1} was already banned!"
-            return 1
-        fi
-    done
+    if [ -f $banlog ]; then
+        for ip in $(cat $banlog); do
+            if [ $ip == $1 ]; then
+                echo "---> IP: ${1} was already banned!"
+                return 1
+            fi
+        done
+    fi
     echo "${1}" >> $banlog
     echo "---> Banning IP: ${1}"
     # BANLIST and BAN iptables chains required for this to work
     sed -i '/-A BANLIST -j RETURN/i-A BANLIST -i '${ifwal1}' -s '${1}'/32 -j BAN' $iptablesconf
+    return 0
 }
 
 function send-mail () {
@@ -132,7 +146,7 @@ for ip in $(cat $iplog | sort -n | uniq); do
     if [ ${freq[${ips[$i]}]} -gt $maxconn ]; then
         ban-ip ${ips[$i]}
         # do not update userlog if IP was already banned
-        if [ $? -ne 1 ]; then
+        if [ $? -eq 0 ]; then
             ((flag+=1))
             timestamp=$(date +%F_%H-%M-%S)
             printf "$timestamp - Banning IP: ${ips[$i]}, \tfreq: ${freq[${ips[$i]}]}\n" >> $userlog
