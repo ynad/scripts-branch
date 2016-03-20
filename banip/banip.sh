@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Automated script to ban IPs making several unauthorized connections
-## Written by ynad - 2014.03.10
+## Written by ynad - 2015.03.10
 
 ## Software requirements:
 # * iptables    (with logging capabilities)
@@ -96,7 +96,7 @@ function ban-ip () {
 }
 
 function send-mail () {
-    printf "To: $mailadmin\nFrom: $mailserver\nSubject: $serverstring: connections warning\n\n" > $mailtext
+    printf "To: $mailadmin\nFrom: $mailserver\nSubject: [$serverstring]: connections warning\n\n" > $mailtext
     printf "$1" >> $mailtext
     ssmtp $mailadmin < $mailtext &
 }
