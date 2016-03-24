@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Automated script to ban IPs making several unauthorized connections
-## Written by ynad - 2015.03.10
+## Written by ynad - v0.1.1, 2016.03.24
 
 ## Software requirements:
 # * iptables    (with logging capabilities)
@@ -73,6 +73,11 @@ function ban-ip () {
     # check if found IP belongs to the whitelist
     if [ -f $whitelist ]; then
         for ip in $(cat $whitelist); do
+            # use resolved IP if the string read from list is a FQDN
+            resolv=$(dig +short $ip)
+            if [ -n "$resolv" ]; then
+                ip=$resolv
+            fi
             if [ $ip == $1 ]; then
                 echo "---> IP: ${1} is whitelisted!"
                 return 2
@@ -82,6 +87,11 @@ function ban-ip () {
     # check if found IP was already banned, if not ban it now
     if [ -f $banlog ]; then
         for ip in $(cat $banlog); do
+            # use resolved IP if the string read from list is a FQDN
+            resolv=$(dig +short $ip)
+            if [ -n "$resolv" ]; then
+                ip=$resolv
+            fi
             if [ $ip == $1 ]; then
                 echo "---> IP: ${1} was already banned!"
                 return 1
