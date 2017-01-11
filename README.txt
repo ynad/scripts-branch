@@ -3,16 +3,17 @@ Scripts-Branch
 
 Version:
 --------
-0.1.2 (2016-09-22)
+Last edit: 2017-01-12
 
     TODO:
+    - add stuff
 
     BUGS:
 
 
 Description:
 ------------
-A collection of scripts (especially bash and similar) that I wrote for my personal use.
+A (partial) collection of scripts (especially bash and similar) that I wrote for my personal use.
 
 
 License:

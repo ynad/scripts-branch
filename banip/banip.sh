@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Automated script to ban IPs making several unauthorized connections
-## Written by ynad - v0.1.1, 2016.03.24
+## Written by ynad - v0.1.2, 2017.01.12
 
 ## Software requirements:
 # * iptables    (with logging capabilities)
@@ -148,7 +148,7 @@ flag=0
 id=1
 # build IPs list and perform banning
 printf "Connections in \"$syslog\" (max conn. allowed = $maxconn):\n"
-for ip in $(cat $iplog | sort -n | uniq); do
+for ip in $(cat $iplog | sort -V | uniq); do
     # fill list of unique IPs
     ips[$i]=$ip
     printf "%3d: - %-15s\t- freq: %3d\n" "$id" "${ips[$i]}" "${freq[${ips[$i]}]}"
