@@ -3,7 +3,7 @@ Scripts-Branch
 
 Version:
 --------
-Last edit: 2017-01-12
+Last edit: 2018-03-29
 
     TODO:
     - add stuff
@@ -13,7 +13,7 @@ Last edit: 2017-01-12
 
 Description:
 ------------
-A (partial) collection of scripts (especially bash and similar) that I wrote for my personal use.
+A (partial) collection of scripts (bash and others) wrote for personal use and fun.
 
 
 License:
