@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Automated script to monitor system logs, and send a report by mail
-## Written by ynad - 2014.02.17
+## Written by ynad - v0.2, 2022.06.15
 
 ## Settings - adapt the following to your environment
 # name to indentify this server (used in emails)
@@ -17,12 +17,13 @@ mailtext=/tmp/ban-mail.txt
 report=/tmp/report.txt
 tmplog=/tmp/syslog
 # declare patterns to search ("--log-prefix" in iptables logging, case sensitive)
-declare -a patterns=( "SSH-in" "VPN-in" "VPN2-in" "BANNED" "WHITELIST" "DOS" "TCP 80 Burst Exhausted" "TCP 443 Burst Exhausted" "Torrent blocked" "Sent mail" )
+declare -a patterns=( "SSH-in" "VPN-in" "BANNED" "WHITELIST" "DOS" "TCP 80 Burst Exhausted" "TCP 443 Burst Exhausted" "Torrent blocked" "Sent mail" )
 
 
 function syntax {
-	printf "Syntax:\n log-monitor.sh [-h | --help]n"
+	printf "Syntax:\n log-monitor.sh [-h | --help]\n"
 }
+
 
 function join-logs {
 	cp /var/log/syslog* /tmp/
@@ -36,16 +37,19 @@ function join-logs {
 	done
 }
 
+
 function clean {
 	rm $tmplog*
 }
+
 
 function send-mail () {
 	printf "To: $mailadmin\nFrom: $mailserver\nSubject: [$serverstring]: system logs report\n\n" > $mailtext
 	#printf "$1" >> $mailtext
 	cat $report >> $mailtext
-	ssmtp $mailadmin < $mailtext &
+	msmtp $mailadmin < $mailtext &
 }
+
 
 function attachment {
 	printf "\n" >> $report
@@ -73,6 +77,7 @@ if [ $# -gt 0 ]; then
 		exit 0
 	fi
 fi
+
 
 # make an unique log file
 join-logs
