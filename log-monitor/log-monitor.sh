@@ -8,7 +8,7 @@
 serverstring=My-Server
 # email destination of warning emails
 mailadmin=myemail@myserver.com
-# sender email - must be configured in sSMTP settings
+# sender email - must be configured in sSMTP/msmtp settings
 mailserver=myserver@myserver.com
 # my logs & temp files
 weeklog=/tmp/syslog-week.log
