@@ -5,7 +5,7 @@
 
 ## Software requirements:
 # * iptables    (with logging capabilities)
-# * ssmtp       (installed and configured, see for example https://wiki.archlinux.org/index.php/SSMTP)
+# * ssmtp or msmtp
 
 ## Settings - adapt the following to your environment
 # set the maximum number of allowed connections for each IP
@@ -22,7 +22,7 @@ userlog=/root/ban-ip.log
 serverstring=My-Server
 # email destination of warning emails
 mailadmin=myemail@myserver.com
-# sender email - must be configured in sSMTP settings
+# sender email - must be configured in sSMTP/msmtp settings
 mailserver=myserver@myserver.com
 # my logs & temp files
 iplog=/tmp/ips.log
@@ -108,7 +108,7 @@ function ban-ip () {
 function send-mail () {
     printf "To: $mailadmin\nFrom: $mailserver\nSubject: [$serverstring]: connections warning\n\n" > $mailtext
     printf "$1" >> $mailtext
-    ssmtp $mailadmin < $mailtext &
+    msmtp $mailadmin < $mailtext &
 }
 
 
